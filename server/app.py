@@ -15,12 +15,12 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 @app.route('/messages')
-def get_messages():
+def messages():
     messages = Message.query.order_by('created_at').all()
     return make_response(jsonify([message.to_dict() for message in messages]))
 
 @app.route('/messages', methods=['POST'])
-def create_message():
+def post_message():
     data = request.get_json()
     message = Message(body=data['body'],username=data['username'])
     db.session.add(message)
@@ -28,7 +28,7 @@ def create_message():
     return make_response(message.to_dict())
 
 @app.route('/messages/<int:id>', methods=['PATCH'])
-def update_message(id):
+def patch_message(id):
     message = Message.query.filter_by(id=id).first()
     if message:
         data = request.get_json()
